@@ -52,6 +52,8 @@ void watch_display_character(uint8_t character, uint8_t position) {
     }
     if (position > 1) {
         if (character == 'T') character = 't'; // uppercase T only works in positions 0 and 1
+        if (character == 'B') character = '8';
+        if (character == 'D') character = 'O';
     }
     if (position == 1) {
         if (character == 'a') character = 'A'; // A needs to be uppercase
@@ -94,8 +96,8 @@ void watch_display_character(uint8_t character, uint8_t position) {
         segdata = segdata >> 1;
     }
 
-    if (character == 'T' && position == 1) watch_set_pixel(1, 12); // add descender
-    else if (position == 0 && (character == 'B' || character == 'D' || character == '@')) watch_set_pixel(0, 15); // add funky ninth segment
+    if (position == 1 && (character == 'T' || character == 'B' || character == 'D')) watch_set_pixel(1, 12); // add descender
+    // else if (position == 0 && (character == 'B' || character == 'D')) watch_set_pixel(0, 15); // add funky ninth segment
     else if (position == 1 && (character == 'B' || character == 'D' || character == '@')) watch_set_pixel(0, 12); // add funky ninth segment
 }
 
