@@ -56,6 +56,16 @@ static void show_number(double num) {
         return;
     }
 
+    if (isinf(num)) {
+        watch_clear_colon();
+        if (negative) {
+            watch_display_string("  -inf  ", 2);
+        } else {
+            watch_display_string("   inf  ", 2);
+        }
+        return;
+    }
+
     if (negative) {
         num = -num;
     }
@@ -200,7 +210,7 @@ static void fn_mul(calculator_state_t *s) {
 
 static void fn_inv(calculator_state_t *s) {
     double a = POP();
-    PUSH(1 / a);
+    PUSH(1.0 / a);
 }
 
 static void fn_pow(calculator_state_t *s) {
@@ -308,7 +318,7 @@ struct {
     {{'D', 'R'}, 1, 0, fn_pop},  // DROP
     {{'D', 'U'}, 1, 2, fn_duplicate},  // Uppercase 'D' is a bit too 'O' for me.
     // {{'C', 'L'}, 1, 0, fn_clear},  // Operation lie - takes _everything_ off the stack, but a check of 1 is sufficient.
-    {{'D', 'P'}, 0, 1, fn_size}, // depth
+    {{'D', 'E'}, 0, 1, fn_size}, // depth
 };
 
 #define FUNCTIONS_LEN (sizeof(functions) / sizeof(functions[0]))
