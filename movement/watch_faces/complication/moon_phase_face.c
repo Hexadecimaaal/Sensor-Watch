@@ -153,7 +153,7 @@ bool moon_phase_face_loop(movement_event_t event, movement_settings_t *settings,
             state->offset = 0;
             // finally: clear out the last two digits and replace them with the sleep mode indicator
             watch_display_string("  ", 8);
-            if (!watch_tick_animation_is_running()) watch_start_tick_animation(1000);
+            if (!watch_tick_animation_is_running()) watch_start_tick_animation(500);
             break;
         case EVENT_ALARM_BUTTON_UP:
             // Pressing the alarm adds an offset of one day to the displayed value,

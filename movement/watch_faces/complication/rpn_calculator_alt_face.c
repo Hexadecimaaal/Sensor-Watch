@@ -81,7 +81,7 @@ static void show_number(double num) {
         int digits = (int)round(num * 10000);
         sprintf(buf, "   0%04d", digits);
         if (negative) {
-            buf[2 ] = '-';
+            buf[2] = '-';
         }
         watch_set_colon();
         watch_display_string(buf, 2);
@@ -187,10 +187,9 @@ static void fn_add(calculator_state_t *s) {
     PUSH(a + b);
 }
 
-static void fn_sub(calculator_state_t *s) {
+static void fn_neg(calculator_state_t *s) {
     double a = POP();
-    double b = POP();
-    PUSH(b - a);
+    PUSH(-a);
 }
 
 static void fn_mul(calculator_state_t *s) {
@@ -199,10 +198,9 @@ static void fn_mul(calculator_state_t *s) {
     PUSH(a * b);
 }
 
-static void fn_div(calculator_state_t *s) {
+static void fn_inv(calculator_state_t *s) {
     double a = POP();
-    double b = POP();
-    PUSH(b / a);
+    PUSH(1 / a);
 }
 
 static void fn_pow(calculator_state_t *s) {
@@ -226,8 +224,9 @@ static void fn_log10(calculator_state_t *s) {
     PUSH(log10(x));
 }
 
-static void fn_e(calculator_state_t *s) {
-    PUSH(M_E);
+static void fn_exp(calculator_state_t *s) {
+    double x = POP();
+    PUSH(exp(x));
 }
 
 static void fn_sin(calculator_state_t *s) {
@@ -240,14 +239,14 @@ static void fn_cos(calculator_state_t *s) {
     PUSH(cos(x));
 }
 
-static void fn_tan(calculator_state_t *s) {
+static void fn_atan(calculator_state_t *s) {
     double x = POP();
-    PUSH(tan(x));
+    PUSH(atan(x));
 }
 
-static void fn_pi(calculator_state_t *s) {
-    PUSH(M_PI);
-}
+// static void fn_pi(calculator_state_t *s) {
+//     PUSH(M_PI);
+// }
 
 static void fn_pop(calculator_state_t *s) {
     --s->stack_size;
@@ -266,13 +265,21 @@ static void fn_duplicate(calculator_state_t *s) {
     PUSH(a);
 }
 
-static void fn_clear(calculator_state_t *s) {
-    s->stack_size = 0;
-}
+// static void fn_clear(calculator_state_t *s) {
+//     s->stack_size = 0;
+// }
 
 static void fn_size(calculator_state_t *s) {
     double a = s->stack_size;
     PUSH(a);
+}
+
+static void fn_rolld(calculator_state_t *s) {
+    double last = C;
+    for (uint8_t i = s->stack_size - 1; i > 0; i--) {
+        s->stack[i] = s->stack[i - 1];
+    }
+    s->stack[0] = last;
 }
 
 struct {
@@ -281,30 +288,31 @@ struct {
     uint8_t output;
     void (*func)(calculator_state_t *);
 } functions[] = {
-    {{'n', 'o'}, 0, 1, fn_number},
+    {{'I', 'N'}, 0, 1, fn_number},
     {{'*', ' '}, 2, 1, fn_add},  // First position * actually looks like a '+'.
-    {{'-', ' '}, 2, 1, fn_sub},
+    {{'*', '-'}, 1, 1, fn_neg},
     {{'H', ' '}, 2, 1, fn_mul},  // For actual *, we throw in the middle vertical segment onto the H.
-    {{'/', ' '}, 2, 1, fn_div},  // There's also some minor hackery on '/'.
-    {{'P', 'o'}, 2, 1, fn_pow},
-    {{'S', 'r'}, 1, 1, fn_sqrt},
-    {{'L', 'n'}, 1, 1, fn_log},
-    {{'L', 'o'}, 1, 1, fn_log10},
-    {{'e', ' '}, 0, 1, fn_e},
-    {{'P', 'i'}, 0, 1, fn_pi},
-    {{'C', 'o'}, 1, 1, fn_cos},
-    {{'S', 'i'}, 1, 1, fn_sin},
-    {{'T', 'a'}, 1, 1, fn_tan},
+    {{'.', 'l'}, 1, 1, fn_inv},  // '.' modified to show bit 9 as a cute caret, as ^-1.
+    {{'^', ' '}, 2, 1, fn_pow},
+    {{'S', 'R'}, 1, 1, fn_sqrt},
+    {{'L', ' '}, 1, 1, fn_log},
+    {{'E', ' '}, 1, 1, fn_exp},
+    //{{'P', 'i'}, 0, 1, fn_pi},
+    {{'C', 'O'}, 1, 1, fn_cos},
+    {{'S', 'I'}, 1, 1, fn_sin},
+    {{'A', 'T'}, 1, 1, fn_atan},
+    {{'L', 'O'}, 1, 1, fn_log10},
     // Stack operations. Accessible via secondary_fn_index (i.e. alarm long press).
-    {{'P', 'O'}, 1, 0, fn_pop},  // This ends up displaying the same as 'POW'. But at least it's in a different place.
-    {{'S', 'W'}, 2, 2, fn_swap},
-    {{'d', 'u'}, 1, 1, fn_duplicate},  // Uppercase 'D' is a bit too 'O' for me.
-    {{'C', 'L'}, 1, 0, fn_clear},  // Operation lie - takes _everything_ off the stack, but a check of 1 is sufficient.
-    {{'L', 'E'}, 1, 0, fn_size},
+    {{']', '['}, 2, 2, fn_swap},
+    {{'w', 'R'}, 1, 1, fn_rolld},
+    {{'D', 'R'}, 1, 0, fn_pop},  // DROP
+    {{'D', 'U'}, 1, 2, fn_duplicate},  // Uppercase 'D' is a bit too 'O' for me.
+    // {{'C', 'L'}, 1, 0, fn_clear},  // Operation lie - takes _everything_ off the stack, but a check of 1 is sufficient.
+    {{'D', 'P'}, 0, 1, fn_size}, // depth
 };
 
 #define FUNCTIONS_LEN (sizeof(functions) / sizeof(functions[0]))
-#define SECONDARY_FN_INDEX (FUNCTIONS_LEN - 4)
+#define SECONDARY_FN_INDEX (FUNCTIONS_LEN - 5)
 
 // Show the function name (using day display)
 static void show_fn(calculator_state_t *s, uint8_t subsecond) {
@@ -325,10 +333,12 @@ static void show_fn(calculator_state_t *s, uint8_t subsecond) {
             // Use the middle segment lines to make our 'H' a '*'-ish thing.
             watch_set_pixel(1, 14);
             break;
-        case '/':
-            // Add a middle bar to division.
-            watch_set_pixel(1, 15);
+        case '.':
+            watch_set_pixel(0, 15);
             break;
+        case 'w':
+            watch_clear_pixel(0, 14);
+            watch_clear_pixel(1, 13);
         default:
             break;
     }
@@ -371,17 +381,20 @@ bool rpn_calculator_alt_face_loop(movement_event_t event, movement_settings_t *s
             break;
         case EVENT_LIGHT_BUTTON_DOWN:
             proposed_stack_size = s->stack_size - functions[s->fn_index].input;
-
+            // printf("proposed: %d\n", proposed_stack_size);
             if (s->mode == CALC_NUMBER) {
                 change_mode(s, CALC_OPERATION);
             } else if (proposed_stack_size < 0 || proposed_stack_size + functions[s->fn_index].output > CALC_MAX_STACK_SIZE) {
                 movement_play_signal();
                 break;
             } else {
+                // printf("old stack top: %f\n", C);
                 functions[s->fn_index].func(s);
+                // printf("stack top: %f\n", C);
+                // printf("stack size: %d\n", s->stack_size);
                 show_stack_top(s);
-                s->fn_index = 0;
-                show_fn(s, 0);
+                // s->fn_index = 0;
+                // show_fn(s, 0);
             }
 
             break;
@@ -425,4 +438,3 @@ void rpn_calculator_alt_face_resign(movement_settings_t *settings, void *context
 
     // handle any cleanup before your watch face goes off-screen.
 }
-

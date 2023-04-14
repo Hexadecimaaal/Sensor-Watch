@@ -60,7 +60,7 @@ static bool world_clock_face_do_display_mode(movement_event_t event, movement_se
     watch_date_time date_time;
     switch (event.event_type) {
         case EVENT_ACTIVATE:
-            if (settings->bit.clock_mode_24h) watch_set_indicator(WATCH_INDICATOR_24H);
+            // if (settings->bit.clock_mode_24h) watch_set_indicator(WATCH_INDICATOR_24H);
             watch_set_colon();
             state->previous_date_time = 0xFFFFFFFF;
             // fall through
@@ -82,27 +82,27 @@ static bool world_clock_face_do_display_mode(movement_event_t event, movement_se
                 sprintf(buf, "%02d%02d", date_time.unit.minute, date_time.unit.second);
             } else {
                 // other stuff changed; let's do it all.
-                if (!settings->bit.clock_mode_24h) {
-                    // if we are in 12 hour mode, do some cleanup.
-                    if (date_time.unit.hour < 12) {
-                        watch_clear_indicator(WATCH_INDICATOR_PM);
-                    } else {
-                        watch_set_indicator(WATCH_INDICATOR_PM);
-                    }
-                    date_time.unit.hour %= 12;
-                    if (date_time.unit.hour == 0) date_time.unit.hour = 12;
-                }
+                // if (!settings->bit.clock_mode_24h) {
+                //     // if we are in 12 hour mode, do some cleanup.
+                //     if (date_time.unit.hour < 12) {
+                //         watch_clear_indicator(WATCH_INDICATOR_PM);
+                //     } else {
+                //         watch_set_indicator(WATCH_INDICATOR_PM);
+                //     }
+                //     date_time.unit.hour %= 12;
+                //     if (date_time.unit.hour == 0) date_time.unit.hour = 12;
+                // }
                 pos = 0;
                 if (event.event_type == EVENT_LOW_ENERGY_UPDATE) {
                     if (!watch_tick_animation_is_running()) watch_start_tick_animation(500);
-                    sprintf(buf, "%c%c%2d%2d%02d  ",
+                    sprintf(buf, "%c%c%2d%02d%02d  ",
                         movement_valid_position_0_chars[state->settings.bit.char_0],
                         movement_valid_position_1_chars[state->settings.bit.char_1],
                         date_time.unit.day,
                         date_time.unit.hour,
                         date_time.unit.minute);
                 } else {
-                    sprintf(buf, "%c%c%2d%2d%02d%02d",
+                    sprintf(buf, "%c%c%2d%02d%02d%02d",
                         movement_valid_position_0_chars[state->settings.bit.char_0],
                         movement_valid_position_1_chars[state->settings.bit.char_1],
                         date_time.unit.day,

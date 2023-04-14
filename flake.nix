@@ -1,7 +1,7 @@
 {
   inputs = {
     # self needs to be passed in as `nix build '.?submodules=1'`.
-    nixpkgs.url = "github:NixOS/nixpkgs/22.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/21.11";
     flake-utils.url  = "github:numtide/flake-utils";
   };
 
@@ -12,6 +12,7 @@
       preBuild = "cd movement/make";
       name = "sensor-watch";
       nativeBuildInputs = [ buildPackages.python3 ];
+      # buildInputs = [ newlib ];
       installPhase = ''
         mkdir -p $out
         cp build/watch.uf2 $out

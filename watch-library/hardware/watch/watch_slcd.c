@@ -84,10 +84,13 @@ void watch_stop_blink(void) {
     SLCD->CTRLD.bit.BLINK = 0;
 }
 
+#define SEGS {SLCD_SEGID(0, 2), SLCD_SEGID(0, 3)}
+#define SIZE 2
+
 void watch_start_tick_animation(uint32_t duration) {
-    watch_display_character(' ', 8);
-    const uint32_t segs[] = { SLCD_SEGID(0, 2)};
-    slcd_sync_start_animation(&SEGMENT_LCD_0, segs, 1, duration);
+    watch_display_character('7', 8);
+    const uint32_t segs[] = SEGS;
+    slcd_sync_start_animation(&SEGMENT_LCD_0, segs, SIZE, duration);
 }
 
 bool watch_tick_animation_is_running(void) {
@@ -95,7 +98,7 @@ bool watch_tick_animation_is_running(void) {
 }
 
 void watch_stop_tick_animation(void) {
-    const uint32_t segs[] = { SLCD_SEGID(0, 2)};
-    slcd_sync_stop_animation(&SEGMENT_LCD_0, segs, 1);
+    const uint32_t segs[] = SEGS;
+    slcd_sync_stop_animation(&SEGMENT_LCD_0, segs, SIZE);
     watch_display_character(' ', 8);
 }

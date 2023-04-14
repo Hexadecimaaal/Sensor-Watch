@@ -29,7 +29,7 @@
 
 static const uint8_t Character_Set[] =
 {
-    0b00000000, //  
+    0b00000000, //
     0b01100000, // ! (L in the top half for positions 4 and 6)
     0b00100010, // "
     0b01100011, // # (degree symbol, hash mark doesn't fit)
@@ -63,9 +63,9 @@ static const uint8_t Character_Set[] =
     0b01010011, // ?
     0b11111111, // @ (all segments on)
     0b01110111, // A
-    0b01111111, // B
+    0b11001111, // B
     0b00111001, // C
-    0b00111111, // D
+    0b10001111, // D
     0b01111001, // E
     0b01110001, // F
     0b00111101, // G

@@ -174,8 +174,8 @@ static bool mode_display(movement_event_t event, movement_settings_t *settings, 
 	    if (refresh_face) {
 		watch_clear_indicator(WATCH_INDICATOR_SIGNAL);
 		watch_set_colon();
-                if (settings->bit.clock_mode_24h)
-                    watch_set_indicator(WATCH_INDICATOR_24H);
+                // if (settings->bit.clock_mode_24h)
+                //     watch_set_indicator(WATCH_INDICATOR_24H);
 
                 state->previous_date_time = REFRESH_TIME;
                 refresh_face = false;
@@ -198,30 +198,30 @@ static bool mode_display(movement_event_t event, movement_settings_t *settings, 
 		sprintf(buf, "%02d%02d", date_time.unit.minute, date_time.unit.second);
 	    } else {
 		/* Other stuff changed; Let's do it all. */
-		if (!settings->bit.clock_mode_24h) {
-		    /* If we are in 12 hour mode, do some cleanup. */
-		    if (date_time.unit.hour < 12) {
-			watch_clear_indicator(WATCH_INDICATOR_PM);
-		    } else {
-			watch_set_indicator(WATCH_INDICATOR_PM);
-		    }
-		    date_time.unit.hour %= 12;
-		    if (date_time.unit.hour == 0)
-			date_time.unit.hour = 12;
-		}
+		// if (!settings->bit.clock_mode_24h) {
+		//     /* If we are in 12 hour mode, do some cleanup. */
+		//     if (date_time.unit.hour < 12) {
+		// 	watch_clear_indicator(WATCH_INDICATOR_PM);
+		//     } else {
+		// 	watch_set_indicator(WATCH_INDICATOR_PM);
+		//     }
+		//     date_time.unit.hour %= 12;
+		//     if (date_time.unit.hour == 0)
+		// 	date_time.unit.hour = 12;
+		// }
 
 		pos = 0;
 		if (event.event_type == EVENT_LOW_ENERGY_UPDATE) {
 		    if (!watch_tick_animation_is_running())
 			watch_start_tick_animation(500);
 
-		    sprintf(buf, "%.2s%2d%2d%02d  ",
+		    sprintf(buf, "%.2s%2d%02d%02d  ",
                             zone_names[state->current_zone],
                             date_time.unit.day,
                             date_time.unit.hour,
                             date_time.unit.minute);
 		} else {
-		    sprintf(buf, "%.2s%2d%2d%02d%02d",
+		    sprintf(buf, "%.2s%2d%02d%02d%02d",
 			    zone_names[state->current_zone],
                             date_time.unit.day,
                             date_time.unit.hour,

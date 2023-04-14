@@ -137,7 +137,7 @@ bool set_time_hackwatch_face_loop(movement_event_t event, movement_settings_t *s
             if (current_page != 2) // Do not set time when we are at seconds, it was already set previously
                 watch_rtc_set_date_time(date_time_settings);
             break;
-        
+
         case EVENT_ALARM_LONG_UP://Setting seconds on long release
             switch (current_page) {
                 case 2: // second
@@ -196,33 +196,33 @@ bool set_time_hackwatch_face_loop(movement_event_t event, movement_settings_t *s
     char buf[11];
     if (current_page < 3) {
         watch_set_colon();
-        if (settings->bit.clock_mode_24h) {
-            watch_set_indicator(WATCH_INDICATOR_24H);
+        // if (settings->bit.clock_mode_24h) {
+            // watch_set_indicator(WATCH_INDICATOR_24H);
             sprintf(buf,
-                    "%s  %2d%02d%02d",
+                    "%s  %02d%02d%02d",
                     set_time_hackwatch_face_titles[current_page],
                     date_time_settings.unit.hour,
                     date_time_settings.unit.minute,
                     date_time_settings.unit.second);
-        } else {
-            sprintf(buf,
-                    "%s  %2d%02d%02d",
-                    set_time_hackwatch_face_titles[current_page],
-                    (date_time_settings.unit.hour % 12) ? (date_time_settings.unit.hour % 12) : 12,
-                    date_time_settings.unit.minute,
-                    date_time_settings.unit.second);
-            if (date_time_settings.unit.hour < 12) {
-                watch_clear_indicator(WATCH_INDICATOR_PM);
-            } else {
-                watch_set_indicator(WATCH_INDICATOR_PM);
-            }
-        }
+        // } else {
+        //     sprintf(buf,
+        //             "%s  %2d%02d%02d",
+        //             set_time_hackwatch_face_titles[current_page],
+        //             (date_time_settings.unit.hour % 12) ? (date_time_settings.unit.hour % 12) : 12,
+        //             date_time_settings.unit.minute,
+        //             date_time_settings.unit.second);
+        //     if (date_time_settings.unit.hour < 12) {
+        //         watch_clear_indicator(WATCH_INDICATOR_PM);
+        //     } else {
+        //         watch_set_indicator(WATCH_INDICATOR_PM);
+        //     }
+        // }
     } else if (current_page < 6) {
         watch_clear_colon();
         watch_clear_indicator(WATCH_INDICATOR_24H);
         watch_clear_indicator(WATCH_INDICATOR_PM);
         sprintf(buf,
-                "%s  %2d%02d%02d",
+                "%s  %02d%02d%02d",
                 set_time_hackwatch_face_titles[current_page],
                 date_time_settings.unit.year + 20,
                 date_time_settings.unit.month,
