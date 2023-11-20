@@ -64,7 +64,7 @@ SIZE = arm-none-eabi-size
 UF2 = python3 $(TOP)/utils/uf2conv.py
 
 CFLAGS += -W -Wall -Wextra -Wmissing-prototypes -Wmissing-declarations
-CFLAGS += --std=gnu99 -Os
+CFLAGS += --std=gnu99 -Os -flto=auto
 CFLAGS += -fno-diagnostics-show-caret
 CFLAGS += -fdata-sections -ffunction-sections
 CFLAGS += -funsigned-char -funsigned-bitfields
@@ -72,6 +72,7 @@ CFLAGS += -mcpu=cortex-m0plus -mthumb
 CFLAGS += -MD -MP -MT $(BUILD)/$(*F).o -MF $(BUILD)/$(@F).d
 
 LDFLAGS += -mcpu=cortex-m0plus -mthumb
+LDFLAGS += -flto
 LDFLAGS += -Wl,--gc-sections
 LDFLAGS += -Wl,--script=$(TOP)/watch-library/hardware/linker/saml22j18.ld
 LDFLAGS += -Wl,--print-memory-usage
@@ -218,6 +219,8 @@ endif
 ifeq ($(LED), BLUE)
 CFLAGS += -DWATCH_IS_BLUE_BOARD
 endif
+
+COLOR = GREEN
 
 ifndef COLOR
 $(error Set the COLOR variable to RED, BLUE, or GREEN depending on what board you have.)
