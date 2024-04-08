@@ -78,7 +78,7 @@ static void clock_indicate_time_signal(clock_state_t *clock) {
 }
 
 static void clock_indicate_24h(movement_settings_t *settings) {
-    clock_indicate(WATCH_INDICATOR_24H, clock_is_in_24h_mode(settings));
+    // clock_indicate(WATCH_INDICATOR_24H, clock_is_in_24h_mode(settings));
 }
 
 static bool clock_is_pm(watch_date_time date_time) {
@@ -131,7 +131,7 @@ static void clock_display_all(watch_date_time date_time) {
     snprintf(
         buf,
         sizeof(buf),
-        "%s%2d%2d%02d%02d",
+        "%s%2d%02d%02d%02d",
         watch_utility_get_weekday(date_time),
         date_time.unit.day,
         date_time.unit.hour,
@@ -191,7 +191,7 @@ static void clock_display_low_energy(watch_date_time date_time) {
     snprintf(
         buf,
         sizeof(buf),
-        "%s%2d%2d%02d  ",
+        "%s%02d%2d%02d  ",
         watch_utility_get_weekday(date_time),
         date_time.unit.day,
         date_time.unit.hour,
@@ -232,7 +232,7 @@ void clock_face_activate(movement_settings_t *settings, void *context) {
 
     clock_indicate_time_signal(clock);
     clock_indicate_alarm(settings);
-    clock_indicate_24h(settings);
+    // clock_indicate_24h(settings);
 
     watch_set_colon();
 
