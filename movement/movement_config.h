@@ -28,9 +28,9 @@
 #include "movement_faces.h"
 
 const watch_face_t watch_faces[] = {
-    simple_clock_face,
+    clock_face,
     world_clock_face,
-    // world_clock_face,
+    world_clock_face,
     timer_face,
     stock_stopwatch_face,
     beats_face,
@@ -44,7 +44,7 @@ const watch_face_t watch_faces[] = {
     thermistor_readout_face,
     voltage_face,
     preferences_face,
-    set_time_hackwatch_face,
+    set_time_face,
     finetune_face,
     nanosec_face,
 };

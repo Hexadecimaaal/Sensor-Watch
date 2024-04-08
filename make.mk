@@ -252,6 +252,6 @@ endif
 
 # Build options to customize movement and faces
 
-ifdef CLOCK_FACE_24H_ONLY
+# ifdef CLOCK_FACE_24H_ONLY
 CFLAGS += -DCLOCK_FACE_24H_ONLY
-endif
+# endif
