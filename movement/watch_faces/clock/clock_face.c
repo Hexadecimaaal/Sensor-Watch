@@ -191,7 +191,7 @@ static void clock_display_low_energy(watch_date_time date_time) {
     snprintf(
         buf,
         sizeof(buf),
-        "%s%02d%2d%02d  ",
+        "%s%2d%02d%02d  ",
         watch_utility_get_weekday(date_time),
         date_time.unit.day,
         date_time.unit.hour,
