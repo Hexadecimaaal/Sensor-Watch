@@ -54,7 +54,7 @@ void simple_clock_face_activate(movement_settings_t *settings, void *context) {
 #ifdef CLOCK_FACE_24H_ONLY
     watch_set_indicator(WATCH_INDICATOR_24H);
 #else
-    if (settings->bit.clock_mode_24h) watch_set_indicator(WATCH_INDICATOR_24H);
+    if (settings->bit.clock_mode_24h && !settings->bit.clock_24h_leading_zero) watch_set_indicator(WATCH_INDICATOR_24H);
 #endif
 
     // handle chime indicator

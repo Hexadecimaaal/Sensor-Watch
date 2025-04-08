@@ -84,18 +84,23 @@ void watch_stop_blink(void) {
     SLCD->CTRLD.bit.BLINK = 0;
 }
 
+static bool animation_supposed_to_be_running = false;
+
 void watch_start_tick_animation(uint32_t duration) {
     watch_display_character(' ', 8);
-    const uint32_t segs[] = { SLCD_SEGID(0, 2)};
-    slcd_sync_start_animation(&SEGMENT_LCD_0, segs, 1, duration);
+    // const uint32_t segs[] = { SLCD_SEGID(0, 2)};
+    // slcd_sync_start_animation(&SEGMENT_LCD_0, segs, 1, duration);
+    animation_supposed_to_be_running = true;
 }
 
 bool watch_tick_animation_is_running(void) {
-    return hri_slcd_get_CTRLD_CSREN_bit(SLCD);
+    // return hri_slcd_get_CTRLD_CSREN_bit(SLCD);
+    return animation_supposed_to_be_running;
 }
 
 void watch_stop_tick_animation(void) {
-    const uint32_t segs[] = { SLCD_SEGID(0, 2)};
-    slcd_sync_stop_animation(&SEGMENT_LCD_0, segs, 1);
+    // const uint32_t segs[] = { SLCD_SEGID(0, 2)};
+    // slcd_sync_stop_animation(&SEGMENT_LCD_0, segs, 1);
+    animation_supposed_to_be_running = false;
     watch_display_character(' ', 8);
 }
